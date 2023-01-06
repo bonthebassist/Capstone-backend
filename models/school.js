@@ -14,6 +14,10 @@ const schoolSchema = new mongoose.Schema({
     schoolColor: {
         type: String,
         required: true
+    },
+    active: {
+        type: Boolean,
+        required: true
     }
 });
 

@@ -27,7 +27,8 @@ async function postSchool(req, res) {
             schoolName: schoolName,
             schoolAdmin: [schoolAdmin],
             usefulLinks: [usefulLinks],
-            schoolColor: schoolColor
+            schoolColor: schoolColor,
+            active: true
         });
 
         // return new user
@@ -120,9 +121,46 @@ async function deleteSchool (req, res){
   
 };
 
+async function schoolInactive (req, res){
+    console.log("schoolDBservice schoolInactive function")
+    try {
+        //verify input
+      const { school_id } = req.body;
+  
+      if (!(school_id)) {
+        res.status(400).send("school_id is required");
+      }
+      //check for user
+      const oldSchool = await School.findOne({ _id: school_id });
+  
+      if (!oldSchool) {
+        return res.status(404).send("School not found");
+      }
+
+      //update School
+      const updatedSchool = await School.updateOne({_id: school_id}, {active: false})
+      console.log(oldSchool.schoolName)
+      console.log(updatedSchool)
+
+      const updateAssocStudents = await Student.updateMany({school_id: school_id}, {active:false})
+      console.log("associated students")
+      console.log(updateAssocStudents)
+
+      res.status(200).send(
+        `updatedSchool: ${updatedSchool.schoolName}, 
+        students updated: ${updateAssocStudents.modifiedCount}`
+      )
+
+    } catch (err) {
+        console.log(err);
+    }
+    
+};
+
 module.exports = {
     postSchool,
     findSchools,
     findSchool,
-    deleteSchool
+    deleteSchool,
+    schoolInactive
 }   

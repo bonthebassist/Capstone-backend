@@ -81,6 +81,17 @@ const removeAttendance = async (req, res) => {
     let deletion = await attendanceData.deleteAttendance(req, res)
 }
 
+//updates
+const shadowStudent = async (req, res) => {
+    console.log("userController shadowStudent function")
+    let update = await studentData.studentInactive(req, res)
+}
+
+const shadowSchool = async (req, res) => {
+    console.log("userController shadowSchool function")
+    let update = await schoolData.schoolInactive(req, res)
+}
+
 module.exports = {
     addSchool,
     addStudent,
@@ -96,5 +107,7 @@ module.exports = {
     removeUser,
     removeSchool,
     removeStudent,
-    removeAttendance
+    removeAttendance,
+    shadowStudent,
+    shadowSchool
 }

@@ -4,10 +4,16 @@ var userController = require('../controllers/userController')
 
 router.put("/attendance", auth, async (req,res) => {
     await userController.addAttendance(req,res)
-})
+});
 
-//THIS IS MORE OF A PUT to delete student from actively being at a school but remain a past student?
-router.put('/shadowStudent', function (req, res){
+//Update student active property to false
+router.put('/shadowStudent', auth, function (req, res){
     userController.shadowStudent(req,res)
-})
+});
+
+//Update school active property to false
+router.put('/shadowSchool', auth, function (req, res){
+    userController.shadowSchool(req,res)
+});
+
 module.exports = router;

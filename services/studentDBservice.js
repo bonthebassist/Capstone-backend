@@ -53,7 +53,8 @@ async function postStudent(req, res) {
             parentLastName: parentLastName,
             parentEmail: parentEmail,
             lessonType: lessonType,
-            lessonPrice: lessonPrice
+            lessonPrice: lessonPrice,
+            active: true
         });
 
         // return new student
@@ -159,12 +160,42 @@ async function deleteStudent (req, res){
   
 };
 
+async function studentInactive (req, res){
+    console.log("studentDBservice studentInactive function")
+    try {
+        //verify input
+      const { student_id } = req.body;
+  
+      if (!(student_id)) {
+        res.status(400).send("student_id is required");
+      }
+      //check for user
+      const oldStudent = await Student.findOne({ _id: student_id });
+  
+      if (!oldStudent) {
+        return res.status(404).send("Student not found");
+      }
+
+      //updateStudent
+      const updatedStudent = await Student.updateOne({_id: student_id}, {active: false})
+      console.log(oldStudent.studentFirstName +" "+ oldStudent.studentLastName)
+      console.log(updatedStudent)
+
+      res.status(200).send(updatedStudent)
+
+    } catch (err) {
+        console.log(err);
+    }
+
+};
+
 module.exports = {
     postStudent,
     findStudents,
     findStudent,
     findStudentsBySchool,
-    deleteStudent
+    deleteStudent,
+    studentInactive
 }
 
 // "studentFirstName": "Marsha",
