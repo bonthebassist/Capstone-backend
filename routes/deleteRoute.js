@@ -2,24 +2,25 @@ var express = require('express');
 var router = express.Router();
 var userController = require('../controllers/userController')
 
-router.put('/all', function (req, res){
-    studentController.getStudents(req,res)
+//to delete user and all associated schools, students and attendance objects
+router.delete('/user', function (req, res){
+    userController.removeUser(req,res)
 })
 
-router.get('/one/:id', function (req, res){
-    studentController.getOneStudent(req, res)
+//to delete school and all associated students and attendances
+router.delete('/school', function (req, res){
+    userController.removeSchool(req,res)
 })
 
-router.post('/addStudent', function (req,res){
-    studentController.addOneStudent(req,res)
+//delete student entirely and all associated attendance objects
+router.delete('/student', function (req, res){
+    userController.removeStudent(req,res)
 })
 
-router.delete('/delete/:name', function (req,res){
-    studentController.delateOneStudent(req,res)
+//delete specific attendance object
+router.delete('/attendance', function (req, res){
+    userController.removeAttendance(req,res)
 })
 
-router.post('/update/:name/:newEmail', function (req,res){
-    studentController.updateOneStudent(req,res)
-})
 
 module.exports = router;

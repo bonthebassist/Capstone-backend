@@ -93,11 +93,43 @@ async function findAttendanceBySchT(req, res) {
     }
 };
 
+async function deleteAttendance (req, res){
+    console.log("attendanceDBservice deleteAttendance function")
+    try {
+      //verify input
+      const { attendance_id } = req.body;
+  
+      if (!(attendance_id)) {
+        res.status(400).send("tutor_id and student_id is required");
+      }
+      //check for user
+      const oldAttendance = await StudentAttendance.findOne({ _id: attendance_id });
+  
+      if (!oldAttendance) {
+        return res.status(404).send("Attendance document not found");
+      }
+      
+      //delete school
+      const deletedAttendanceDoc = await StudentAttendance.findOneAndDelete({_id: attendance_id})
+      console.log("deletedAttendanceDoc:")
+      console.log(deletedAttendanceDoc)
+  
+      res.status(200).send(
+        `deletedAttendanceDoc: ${deletedAttendanceDoc.studentName}, ${deletedAttendanceDoc.schoolDate}`
+        )
+  
+    } catch (err) {
+      console.log(err);
+    }
+    
+  
+};
 
 module.exports = {
     postAttendance,
     findAttendanceByST,
-    findAttendanceBySchT
+    findAttendanceBySchT,
+    deleteAttendance
 }
 
 // "student_id": "63b7f7a635b24a30ea8fceff",

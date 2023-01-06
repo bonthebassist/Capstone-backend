@@ -3,6 +3,7 @@ const schoolData = require('../services/schoolDBservice.js')
 const studentData = require('../services/studentDBservice.js') 
 const attendanceData = require('../services/attendanceDBservice.js') 
 
+//post requests
 const addSchool = async (req, res) => {
     console.log("userController addSchool function")
     let update = await schoolData.postSchool(req, res)
@@ -18,6 +19,7 @@ const addAttendance = async (req, res) => {
     let update = await attendanceData.postAttendance(req, res)
 }
 
+//Get requests
 const getUser = async (req, res) => {
     console.log("userController getUser function")
     let user = await userData.findUser(req, res)
@@ -58,6 +60,27 @@ const getAttendanceSchT = async (req, res) => {
     let students = await attendanceData.findAttendanceBySchT(req, res)
 }
 
+//Deletions
+const removeUser = async (req, res) => {
+    console.log("userController removeUser function")
+    let deletion = await userData.deleteUser(req, res)
+}
+
+const removeSchool = async (req, res) => {
+    console.log("userController removeSchool function")
+    let deletion = await schoolData.deleteSchool(req, res)
+}
+
+const removeStudent = async (req, res) => {
+    console.log("userController removeStudent function")
+    let deletion = await studentData.deleteStudent(req, res)
+}
+
+const removeAttendance = async (req, res) => {
+    console.log("userController removeAttendance function")
+    let deletion = await attendanceData.deleteAttendance(req, res)
+}
+
 module.exports = {
     addSchool,
     addStudent,
@@ -69,5 +92,9 @@ module.exports = {
     getStudent,
     getStudentsBySchool,
     getAttendanceST,
-    getAttendanceSchT
+    getAttendanceSchT,
+    removeUser,
+    removeSchool,
+    removeStudent,
+    removeAttendance
 }

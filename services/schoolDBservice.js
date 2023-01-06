@@ -2,7 +2,6 @@ const User = require("../models/user");
 const Student = require("../models/student");
 const StudentAttendance = require("../models/studentAttendance");
 const School = require("../models/school");
-const studentModel = require('../models/student.js');
 
 async function postSchool(req, res) {
     console.log("schoolDBservice postSchool function")
@@ -77,8 +76,53 @@ async function findSchool(req, res) {
     }
 };
 
+async function deleteSchool (req, res){
+    console.log("schoolDBservice deleteSchool function")
+    try {
+      //verify input
+      const { tutor_id, school_id } = req.body;
+  
+      if (!(user_id && school_id)) {
+        res.status(400).send("user_id is required");
+      }
+      //check for user
+      const oldSchool = await School.findOne({ _id: school_id, tutor_id: tutor_id });
+  
+      if (!oldSchool) {
+        return res.status(404).send("School not found");
+      }
+      
+      //delete associated students
+      const foundStudents = await Student.deleteMany({ tutor_id: tutor_id, school_id: school_id })
+      console.log("Students:")
+      console.log(foundStudents)
+      
+      //delete associated studentAttendance
+      const foundAttendances = await StudentAttendance.deleteMany({ tutor_id: tutor_id, school_id: school_id })
+      console.log("StudentAttendances:")
+      console.log(foundAttendances)
+      
+      //delete school
+      const deletedSchool = await School.findOneAndDelete({_id: school_id})
+      console.log("deletedSchool:")
+      console.log(deletedUser)
+  
+      res.status(200).send(
+        `deletedSchool: ${deletedSchool.schoolName}, 
+        students deleted: ${foundStudents.deletedCount},
+        attendances deleted: ${foundAttendances.deletedCount}`
+        )
+  
+    } catch (err) {
+      console.log(err);
+    }
+    
+  
+};
+
 module.exports = {
     postSchool,
     findSchools,
-    findSchool
+    findSchool,
+    deleteSchool
 }   

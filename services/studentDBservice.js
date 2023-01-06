@@ -121,11 +121,50 @@ async function findStudentsBySchool(req, res) {
     }
 };
 
+async function deleteStudent (req, res){
+    console.log("studentDBservice deleteStudent function")
+    try {
+      //verify input
+      const { tutor_id, student_id } = req.body;
+  
+      if (!(tutor_id && student_id)) {
+        res.status(400).send("tutor_id and student_id is required");
+      }
+      //check for user
+      const oldStudent = await Student.findOne({ _id: student_id, tutor_id: tutor_id });
+  
+      if (!oldStudent) {
+        return res.status(404).send("Student not found");
+      }
+      
+      //delete associated studentAttendance
+      const foundAttendances = await StudentAttendance.deleteMany({ tutor_id: tutor_id, student_id: student_id })
+      console.log("StudentAttendances:")
+      console.log(foundAttendances)
+      
+      //delete school
+      const deletedStudent = await Student.findOneAndDelete({_id: student_id})
+      console.log("deletedStudent:")
+      console.log(deletedStudent)
+  
+      res.status(200).send(
+        `deletedStudent: ${deletedStudent.studentFirstName} ${deletedStudent.studentLastName}, 
+        attendances deleted: ${foundAttendances.deletedCount}`
+        )
+  
+    } catch (err) {
+      console.log(err);
+    }
+    
+  
+};
+
 module.exports = {
     postStudent,
     findStudents,
     findStudent,
-    findStudentsBySchool
+    findStudentsBySchool,
+    deleteStudent
 }
 
 // "studentFirstName": "Marsha",

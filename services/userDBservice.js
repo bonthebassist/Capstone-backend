@@ -102,7 +102,7 @@ async function loginUser(req, res){
 
 };
 
-async function findUser (req, res){
+async function findUser (req, res){ //this may need a response if no user is found
   console.log("userDBservice findUser function")
   try {
     const { user_id } = req.body;
@@ -120,9 +120,60 @@ async function findUser (req, res){
 
 };
 
+async function deleteUser (req, res){
+  console.log("userDBservice deleteUser function")
+  try {
+    //verify input
+    const { user_id } = req.body;
+
+    if (!user_id) {
+      res.status(400).send("user_id is required");
+    }
+    //check for user
+    const oldUser = await User.findOne({ _id: user_id });
+
+    if (!oldUser) {
+      return res.status(404).send("User not found");
+    }
+
+    //delete associated schools
+    const foundSchools = await School.deleteMany({ tutor_id: user_id })
+    console.log("Schools:")
+    console.log(foundSchools)
+    
+    //delete associated students
+    const foundStudents = await Student.deleteMany({ tutor_id: user_id })
+    console.log("Students:")
+    console.log(foundStudents)
+    
+    //delete associated studentAttendance
+    const foundAttendances = await StudentAttendance.deleteMany({ tutor_id: user_id })
+    console.log("StudentAttendances:")
+    console.log(foundAttendances)
+    
+    //delete user account
+    const deletedUser = await User.findOneAndDelete({_id: user_id})
+    console.log("deletedUser:")
+    console.log(deletedUser)
+
+    res.status(200).send(
+      `deletedUser: ${deletedUser.email}, 
+      schools deleted: ${foundSchools.deletedCount},
+      students deleted: ${foundStudents.deletedCount},
+      attendances deleted: ${foundAttendances.deletedCount}`
+      )
+
+  } catch (err) {
+    console.log(err);
+  }
+  
+
+};
+
 
 module.exports = {
     checkRegistration,
     loginUser,
-    findUser
+    findUser,
+    deleteUser
 }   
