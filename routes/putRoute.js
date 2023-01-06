@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var userController = require('../controllers/userController')
+const auth = require("../middleware/auth");
 
 router.put("/attendance", auth, async (req,res) => {
     await userController.addAttendance(req,res)
