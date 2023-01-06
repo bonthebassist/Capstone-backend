@@ -102,8 +102,27 @@ async function loginUser(req, res){
 
 };
 
+async function findUser (req, res){
+  console.log("userDBservice findUser function")
+  try {
+    const { user_id } = req.body;
+
+    if (!user_id) {
+      res.status(400).send("user_id is required");
+    }
+
+    const user = await User.findOne({ _id: user_id });
+
+    res.status(200).json(user)
+  } catch (err) {
+    console.log(err);
+  }
+
+};
+
 
 module.exports = {
     checkRegistration,
-    loginUser
+    loginUser,
+    findUser
 }   

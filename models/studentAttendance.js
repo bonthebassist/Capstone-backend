@@ -13,6 +13,10 @@ const studentAttendanceSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    studentName:{
+        type: String,
+        required: true
+    },
     schoolDate: {
         type: String,
         required: true

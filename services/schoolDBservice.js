@@ -39,7 +39,46 @@ async function postSchool(req, res) {
     }
 };
 
+async function findSchools(req, res) {
+    console.log("schoolDBservice findSchools function")
+    try {
+        const { tutor_id } = req.body
+
+        if (!tutor_id) {
+            res.status(400).send("tutor_id is required");
+        }
+
+        const schools = await School.find({ tutor_id: tutor_id })
+
+        res.status(200).json(schools)
+
+    } catch (err) {
+        console.log("in the catch")
+        console.log(err);
+    }
+};
+
+async function findSchool(req, res) {
+    console.log("schoolDBservice findSchool function")
+    try {
+        const { school_id } = req.body
+
+        if (!school_id) {
+            res.status(400).send("school_id is required");
+        }
+
+        const school = await School.findOne({ _id: school_id })
+
+        res.status(200).json(school)
+
+    } catch (err) {
+        console.log("in the catch")
+        console.log(err);
+    }
+};
 
 module.exports = {
-    postSchool
+    postSchool,
+    findSchools,
+    findSchool
 }   

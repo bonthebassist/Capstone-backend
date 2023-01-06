@@ -64,9 +64,68 @@ async function postStudent(req, res) {
     }
 };
 
+async function findStudents(req, res) {
+    console.log("studentDBservice findStudents function")
+    try {
+        const { tutor_id } = req.body
+
+        if (!tutor_id) {
+            res.status(400).send("tutor_id is required");
+        }
+
+        const students = await Student.find({ tutor_id: tutor_id })
+
+        res.status(200).json(students)
+
+    } catch (err) {
+        console.log("in the catch")
+        console.log(err);
+    }
+};
+
+async function findStudent(req, res) {
+    console.log("studentDBservice findStudent function")
+    try {
+        const { student_id } = req.body
+
+        if (!student_id) {
+            res.status(400).send("school_id is required");
+        }
+
+        const student = await Student.findOne({ _id: student_id })
+
+        res.status(200).json(student)
+
+    } catch (err) {
+        console.log("in the catch")
+        console.log(err);
+    }
+};
+
+async function findStudentsBySchool(req, res) {
+    console.log("studentDBservice findStudents function")
+    try {
+        const { tutor_id, school_id } = req.body
+
+        if (!(tutor_id && school_id)) {
+            res.status(400).send("tutor_id is required");
+        }
+
+        const students = await Student.find({ tutor_id: tutor_id, school_id: school_id })
+
+        res.status(200).json(students)
+
+    } catch (err) {
+        console.log("in the catch")
+        console.log(err);
+    }
+};
 
 module.exports = {
-    postStudent
+    postStudent,
+    findStudents,
+    findStudent,
+    findStudentsBySchool
 }
 
 // "studentFirstName": "Marsha",
