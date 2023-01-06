@@ -8,7 +8,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
 
 async function checkRegistration (req, res){
-    console.log("dbservice checkRegistration function")
+    console.log("userDBservice checkRegistration function")
     try {
         // Get user input
         const { firstName, lastName, email, password, instrument } = req.body;
@@ -65,7 +65,7 @@ async function checkRegistration (req, res){
 };
 
 async function loginUser(req, res){
-    console.log("dbservice loginUser function")
+    console.log("userDBservice loginUser function")
     try {
         // Get user input
         const { email, password } = req.body;

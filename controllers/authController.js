@@ -1,4 +1,4 @@
-const userData = require('../services/dbservice.js') 
+const userData = require('../services/userDBservice.js') 
 
 const register = async (req, res) => {
     console.log("authController register function")  
