@@ -1,25 +1,21 @@
 var express = require('express');
 var router = express.Router();
-var userController = require('../controllers/userController')
+var authController = require('../controllers/authController')
+const auth = require("../middleware/auth");
 
-router.get('/all', function (req, res){
-    studentController.getStudents(req,res)
+router.post('/register', async function (req, res){
+    console.log("register route")
+    await authController.register(req,res)
 })
 
-router.get('/one/:id', function (req, res){
-    studentController.getOneStudent(req, res)
+router.post('/login', async function (req, res){
+    console.log("register route")
+    await authController.login(req,res)
 })
 
-router.post('/addStudent', function (req,res){
-    studentController.addOneStudent(req,res)
-})
+router.post("/welcome", auth, (req, res) => {
+    res.status(200).send("Welcome 🙌 ");
+});
 
-router.delete('/delete/:name', function (req,res){
-    studentController.delateOneStudent(req,res)
-})
-
-router.post('/update/:name/:newEmail', function (req,res){
-    studentController.updateOneStudent(req,res)
-})
 
 module.exports = router;

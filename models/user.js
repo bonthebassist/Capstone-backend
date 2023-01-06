@@ -20,6 +20,9 @@ const userSchema = new mongoose.Schema({
     instrument: {
         type: String
     },
+    token: {
+        type: String
+    },
     messages: {
         invoiceReminder:"",
         invoice:"",

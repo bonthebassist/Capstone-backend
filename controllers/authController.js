@@ -1,27 +1,18 @@
-// const userData = require('../services/dbservice.js') 
+const userData = require('../services/dbservice.js') 
 
-// const getStudents = async (req, res) => {  
-//     let students = await getStudentData.fetchStudents(req, res)
-//     return students
-// }
+const register = async (req, res) => {
+    console.log("authController register function")  
+    let registration = await userData.checkRegistration(req, res)
+    return registration
+}
 
-// const getOneStudent = async (req, res) => {
-//     let student = await getStudentData.fetchStudentById(req, res)
-//         return student
-// }
+const login = async (req, res) => {  
+    console.log("authController login function") 
+    let login = await userData.loginUser(req, res)
+    return login
+}
 
-// const addOneStudent = async (req, res) => {
-//     let student = await getStudentData.createStudent(req, res)
-
-// }
-
-// const delateOneStudent = async (req, res) => {
-//     let student = await getStudentData.deleteStudentbyName(req,res)
-// }
-
-// const updateOneStudent = async (req, res) => {
-//     let student = await getStudentData.updateStudent(req,res)
-// }
-// module.exports = {
-//     getStudents, getOneStudent, addOneStudent, delateOneStudent, updateOneStudent
-// }
+module.exports = {
+    register,
+    login
+}
