@@ -170,10 +170,76 @@ async function deleteUser (req, res){
 
 };
 
+async function updateUserDetails (req, res) {
+  console.log("userDBservice updateuser function")
+  try {
+    const { user_id, firstName, lastName, email, instrument } = req.body;
+
+    if (!(user_id && firstName && lastName && email && instrument)) {
+      res.status(400).send("All inputs are required");
+    }
+
+    //check for user
+    const oldUser = await User.findOne({ _id: user_id });
+
+    if (!oldUser) {
+      return res.status(404).send("User not found");
+    }
+
+    //update details
+    const user = await User.findOneAndUpdate({ _id: user_id },{
+        firstName: firstName,
+        lastName: lastName,
+        email: email.toLowerCase(), // sanitize: convert email to lowercase
+        instrument: instrument
+    });
+
+    res.status(200).json(user)
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+async function updateUserMessages (req, res) {
+  console.log("userDBservice updateUserMessages function")
+  try {
+    const { user_id, invoiceSend, invoiceReminder, lateForLesson, absentFromLesson } = req.body;
+
+    //check input
+    if (!(user_id)) {
+      res.status(400).send("user_id is required");
+    }
+
+    //check for user
+    const oldUser = await User.findOne({ _id: user_id });
+
+    if (!oldUser) {
+      return res.status(404).send("User not found");
+    }
+    //update user messages
+    const user = await User.findOneAndUpdate({ _id: user_id },{
+        messages:{
+            invoiceReminder:invoiceReminder,
+            invoiceSend: invoiceSend,
+            lateForLesson: lateForLesson,
+            absentFromLesson: absentFromLesson
+        }
+    });
+
+    res.status(200).json(user)
+
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+
 
 module.exports = {
     checkRegistration,
     loginUser,
     findUser,
-    deleteUser
+    deleteUser,
+    updateUserDetails,
+    updateUserMessages
 }   

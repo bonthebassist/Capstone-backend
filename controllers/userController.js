@@ -92,6 +92,16 @@ const shadowSchool = async (req, res) => {
     let update = await schoolData.schoolInactive(req, res)
 }
 
+const editUserDetails = async (req, res) => {
+    console.log("userController editUserDetails function")
+    let update = await userData.updateUserDetails(req, res)
+}
+
+const editUserMessages = async (req, res) => {
+    console.log("userController editUserMessages function")
+    let update = await userData.updateUserMessages(req, res)
+}
+
 module.exports = {
     addSchool,
     addStudent,
@@ -109,5 +119,7 @@ module.exports = {
     removeStudent,
     removeAttendance,
     shadowStudent,
-    shadowSchool
+    shadowSchool,
+    editUserDetails,
+    editUserMessages
 }
