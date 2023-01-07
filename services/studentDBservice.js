@@ -230,7 +230,7 @@ async function updateStudentDetails (req, res) {
       }
   
       //update details
-      const student = await Student.findOneAndUpdate({ _id: student_id },{
+      const student = await Student.updateOne({ _id: student_id },{
         studentFirstName: studentFirstName,
         studentLastName: studentLastName,
         studentEmail: studentEmail.toLowerCase(),

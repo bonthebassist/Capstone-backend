@@ -131,7 +131,7 @@ async function updateAttendanceDetails (req, res) {
       //verify input
       const { attendance_id, student_id, school_id, studentName, schoolDate, termLength, goalLessonCount } = req.body;
   
-      if (!(attendance_id && student_id && tutor_id && school_id && studentName && schoolDate && termLength && goalLessonCount)) {
+      if (!(attendance_id && student_id && school_id && studentName && schoolDate && termLength && goalLessonCount)) {
         res.status(400).send("All inputs are required");
       }
       //check for user
@@ -142,7 +142,7 @@ async function updateAttendanceDetails (req, res) {
       }
       
       //delete school
-      const updatedAttendanceDoc = await StudentAttendance.findOneAndUpdate({_id: attendance_id},
+      const updatedAttendanceDoc = await StudentAttendance.updateOne({_id: attendance_id},
         {
             student_id: student_id,
             school_id: school_id,
@@ -179,7 +179,7 @@ async function updateAttendanceInvoiced (req, res) {
       }
       
       //delete school
-      const updatedAttendanceDoc = await StudentAttendance.findOneAndUpdate(
+      const updatedAttendanceDoc = await StudentAttendance.updateOne(
         {_id: attendance_id},
         { invoiced: invoiced })
       console.log("updatedAttendanceDoc:")
@@ -209,14 +209,32 @@ async function updateAttendanceRecord (req, res) {
         return res.status(404).send("Attendance document not found");
       }
       
-      //delete school
-      const updatedAttendanceDoc = await StudentAttendance.findOneAndUpdate(
+      //update attendance document
+      const updatedAttendanceDoc = await StudentAttendance.updateOne(
         {_id: attendance_id, "attendance.week": week},
-        { record: record, notes: notes })
+        { "attendance.$" : {week: week, record: record, notes: notes} })
       console.log("updatedAttendanceDoc:")
       console.log(updatedAttendanceDoc)
-  
-      res.status(200).send(updatedAttendanceDoc)
+      
+
+      //update lesson count
+      const attendanceObj = await StudentAttendance.findOne({_id: attendance_id})
+
+      const studentAttendance = attendanceObj.attendance
+      const newArray = studentAttendance.filter(function (el) {
+      return (
+        el.record === ("P"||"A"||"L")
+        )})
+
+      let attendanceCount = newArray.length
+      console.log(attendanceCount)
+      //dbcall for updating lessonCount
+      const updatedAttCount = await StudentAttendance.updateOne({_id: attendance_id}, {lessonCount: attendanceCount})
+      console.log("Updated lesson Count: ")
+      console.log(updatedAttCount)
+    
+    
+    res.status(200).send("update successful")
   
     } catch (err) {
       console.log(err);

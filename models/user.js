@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
     },
     messages: {
         invoiceReminder:"",
-        invoice:"",
+        invoiceSend:"",
         lateForLesson:"",
         absentFromLesson:""
     }

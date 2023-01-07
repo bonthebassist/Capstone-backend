@@ -208,7 +208,7 @@ async function updateAddAdmin (req, res){
       //update School
       const updatedSchool = await School.updateOne(
         {_id: school_id},
-        { $push : {"schoolAdmin.$": administrator}})
+        { $push : {"schoolAdmin": administrator}})
       console.log(oldSchool.schoolName)
       console.log(updatedSchool)
 
@@ -270,7 +270,7 @@ async function updateLinksAdd (req, res){
       //update School
       const updatedSchool = await School.updateOne(
         {_id: school_id},
-        { $push : {"usefulLinks.$": link}})
+        { $push : {"usefulLinks": link}})
       console.log(oldSchool.schoolName)
       console.log(updatedSchool)
 
@@ -301,7 +301,7 @@ async function updateLinksDelete (req, res){
       //update School
       const updatedSchool = await School.updateOne(
         {_id: school_id, "usefulLinks.linkTitle": linkTitle},
-        { $pull : {"usefulLinks.$.linkTitle": linkTitle}})
+        { $pull : {"usefulLinks.$": linkTitle}})
       console.log(oldSchool.schoolName)
       console.log(updatedSchool)
 

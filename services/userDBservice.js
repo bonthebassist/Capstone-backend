@@ -187,7 +187,7 @@ async function updateUserDetails (req, res) {
     }
 
     //update details
-    const user = await User.findOneAndUpdate({ _id: user_id },{
+    const user = await User.updateOne({ _id: user_id },{
         firstName: firstName,
         lastName: lastName,
         email: email.toLowerCase(), // sanitize: convert email to lowercase
@@ -217,7 +217,7 @@ async function updateUserMessages (req, res) {
       return res.status(404).send("User not found");
     }
     //update user messages
-    const user = await User.findOneAndUpdate({ _id: user_id },{
+    const user = await User.updateOne({ _id: user_id },{
         messages:{
             invoiceReminder:invoiceReminder,
             invoiceSend: invoiceSend,

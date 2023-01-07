@@ -114,7 +114,7 @@ const editAttendanceDetails = async (req, res) => {
 
 const editInvoiced = async (req, res) => {
     console.log("userController editAttendanceInvoiced function")
-    let update = await attendanceData.updateInvoiced(req,res)
+    let update = await attendanceData.updateAttendanceInvoiced(req,res)
 }
 
 const inputRecord = async (req, res) => {
