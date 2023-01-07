@@ -102,6 +102,11 @@ const editUserMessages = async (req, res) => {
     let update = await userData.updateUserMessages(req, res)
 }
 
+const editStudentDetails = async (req, res) => {
+    console.log("userController editStudentDetails function")
+    let update = await studentData.updateStudentDetails(req, res)
+}
+
 module.exports = {
     addSchool,
     addStudent,
@@ -121,5 +126,6 @@ module.exports = {
     shadowStudent,
     shadowSchool,
     editUserDetails,
-    editUserMessages
+    editUserMessages,
+    editStudentDetails
 }

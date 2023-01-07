@@ -189,13 +189,75 @@ async function studentInactive (req, res){
 
 };
 
+async function updateStudentDetails (req, res) {
+    console.log("studentDBservice updateStudentDetails function")
+    try {
+      const { 
+        student_id, 
+        studentEmail, 
+        studentFirstName, 
+        studentLastName, 
+        school_id, 
+        instrument, 
+        yearLevel, 
+        parentEmail, 
+        parentFirstName, 
+        parentLastName, 
+        lessonPrice, 
+        lessonType 
+        } = req.body;
+  
+      if (!(student_id && 
+        studentEmail && 
+        studentFirstName && 
+        studentLastName && 
+        school_id && 
+        instrument && 
+        yearLevel && 
+        parentEmail && 
+        parentFirstName && 
+        parentLastName && 
+        lessonPrice && 
+        lessonType)) {
+        res.status(400).send("All inputs are required");
+      }
+  
+      //check for Student
+      const oldStudent = await Student.findOne({ _id: student_id });
+  
+      if (!oldStudent) {
+        return res.status(404).send("Student not found");
+      }
+  
+      //update details
+      const student = await Student.findOneAndUpdate({ _id: student_id },{
+        studentFirstName: studentFirstName,
+        studentLastName: studentLastName,
+        studentEmail: studentEmail.toLowerCase(),
+        school_id: school_id,
+        instrument: instrument,
+        yearLevel: yearLevel,
+        parentFirstName: parentFirstName,
+        parentLastName: parentLastName,
+        parentEmail: parentEmail.toLowerCase(),
+        lessonType: lessonType,
+        lessonPrice: lessonPrice
+      });
+  
+      res.status(200).json(student)
+    } catch (err) {
+      console.log(err);
+    }
+};
+
 module.exports = {
     postStudent,
     findStudents,
     findStudent,
     findStudentsBySchool,
     deleteStudent,
-    studentInactive
+    studentInactive,
+    updateStudentDetails
 }
 
 // "studentFirstName": "Marsha",
