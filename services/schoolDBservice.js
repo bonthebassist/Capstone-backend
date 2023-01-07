@@ -157,10 +157,171 @@ async function schoolInactive (req, res){
     
 };
 
+async function updateSchoolDetails (req, res){
+    console.log("schoolDBservice updateSchoolDetails function")
+    try {
+        //verify input
+      const { school_id, schoolName, schoolColor } = req.body;
+  
+      if (!(school_id)) {
+        res.status(400).send("school_id is required");
+      }
+      //check for user
+      const oldSchool = await School.findOne({ _id: school_id });
+  
+      if (!oldSchool) {
+        return res.status(404).send("School not found");
+      }
+
+      //update School
+      const updatedSchool = await School.updateOne(
+        {_id: school_id},
+        { schoolName: schoolName, schoolColor: schoolColor})
+      console.log(oldSchool.schoolName)
+      console.log(updatedSchool)
+
+
+      res.status(200).send(updatedSchool)
+
+    } catch (err) {
+        console.log(err);
+    }
+    
+};
+
+async function updateAddAdmin (req, res){
+    console.log("schoolDBservice updateSchoolAddAdmin function")
+    try {
+        //verify input
+      const { school_id, administrator } = req.body; //administrator will be an object {contactName:"",contactEmail:""}
+  
+      if (!(school_id)) {
+        res.status(400).send("school_id is required");
+      }
+      //check for user
+      const oldSchool = await School.findOne({ _id: school_id });
+  
+      if (!oldSchool) {
+        return res.status(404).send("School not found");
+      }
+
+      //update School
+      const updatedSchool = await School.updateOne(
+        {_id: school_id},
+        { $push : {"schoolAdmin.$": administrator}})
+      console.log(oldSchool.schoolName)
+      console.log(updatedSchool)
+
+      res.status(200).send(updatedSchool)
+
+    } catch (err) {
+        console.log(err);
+    }
+    
+};
+
+async function updateDeleteAdmin (req, res){
+    console.log("schoolDBservice updateSchoolDeleteAdmin function")
+    try {
+        //verify input
+      const { school_id, administratorEmail } = req.body; 
+  
+      if (!(school_id)) {
+        res.status(400).send("school_id is required");
+      }
+      //check for user
+      const oldSchool = await School.findOne({ _id: school_id });
+  
+      if (!oldSchool) {
+        return res.status(404).send("School not found");
+      }
+
+      //update School
+      const updatedSchool = await School.updateOne(
+        {_id: school_id, "schoolAdmin.contactEmail": administratorEmail},
+        { $pull : {"schoolAdmin.$": administratorEmail}})
+      console.log(oldSchool.schoolName)
+      console.log(updatedSchool)
+
+      res.status(200).send(updatedSchool)
+
+    } catch (err) {
+        console.log(err);
+    }
+    
+};
+
+async function updateLinksAdd (req, res){
+    console.log("schoolDBservice updateLinksAdd function")
+    try {
+        //verify input
+      const { school_id, link } = req.body; //link will be an object {linkTitle:"",linkURL:""}
+  
+      if (!(school_id && link)) {
+        res.status(400).send("school_id and link are required");
+      }
+      //check for user
+      const oldSchool = await School.findOne({ _id: school_id });
+  
+      if (!oldSchool) {
+        return res.status(404).send("School not found");
+      }
+
+      //update School
+      const updatedSchool = await School.updateOne(
+        {_id: school_id},
+        { $push : {"usefulLinks.$": link}})
+      console.log(oldSchool.schoolName)
+      console.log(updatedSchool)
+
+      res.status(200).send(updatedSchool)
+
+    } catch (err) {
+        console.log(err);
+    }
+    
+};
+
+async function updateLinksDelete (req, res){
+    console.log("schoolDBservice updateLinksDelete function")
+    try {
+        //verify input
+      const { school_id, linkTitle } = req.body; 
+  
+      if (!(school_id, linkTitle)) {
+        res.status(400).send("school_id is required");
+      }
+      //check for user
+      const oldSchool = await School.findOne({ _id: school_id });
+  
+      if (!oldSchool) {
+        return res.status(404).send("School not found");
+      }
+
+      //update School
+      const updatedSchool = await School.updateOne(
+        {_id: school_id, "usefulLinks.linkTitle": linkTitle},
+        { $pull : {"usefulLinks.$.linkTitle": linkTitle}})
+      console.log(oldSchool.schoolName)
+      console.log(updatedSchool)
+
+      res.status(200).send(updatedSchool)
+
+    } catch (err) {
+        console.log(err);
+    }
+    
+};
+
 module.exports = {
     postSchool,
     findSchools,
     findSchool,
     deleteSchool,
-    schoolInactive
+    schoolInactive,
+    updateSchoolDetails,
+    updateAddAdmin,
+    updateDeleteAdmin,
+    updateLinksAdd,
+    updateLinksDelete
 }   

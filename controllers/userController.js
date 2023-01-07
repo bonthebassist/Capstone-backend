@@ -121,6 +121,33 @@ const inputRecord = async (req, res) => {
     console.log("userController inputRecord function")
     let update = await attendanceData.updateAttendanceRecord(req,res)
 }
+
+const editSchoolDetails = async (req, res) => {
+    console.log("userController editSchoolDetails function")
+    let update = await schoolData.updateSchoolDetails(req,res)
+
+}
+
+const addSchoolAdmin = async (req, res) => {
+    console.log("userController addSchoolAdmin function")
+    let update = await schoolData.updateAddAdmin(req,res)
+}
+
+const addSchoolLink = async (req, res) => {
+    console.log("userController addSchoolLink function")
+    let update = await schoolData.updateLinksAdd(req,res)
+}
+
+const deleteSchoolAdmin = async (req, res) => {
+    console.log("userController deleteSchoolAdmin function")
+    let update = await schoolData.updateDeleteAdmin(req,res)
+}
+
+const deleteSchoolLink = async (req, res) => {
+    console.log("userController deleteSchoolLink function")
+    let update = await schoolData.updateLinksDelete(req,res)
+}
+
 module.exports = {
     addSchool,
     addStudent,
@@ -143,5 +170,11 @@ module.exports = {
     editUserMessages,
     editStudentDetails,
     editAttendanceDetails,
-    editInvoiced
+    editInvoiced,
+    inputRecord,
+    editSchoolDetails,
+    addSchoolAdmin,
+    addSchoolLink,
+    deleteSchoolAdmin,
+    deleteSchoolLink
 }
