@@ -6,20 +6,11 @@ const server = http.createServer(app);
 
 require("dotenv").config();
 require("./config/database").connect();
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken')
 
-const auth = require("./middleware/auth");
 const credentials = require('./middleware/credentials');
-
 
 const cors = require('cors')
 const corsOptions = require("./config/corsOptions");
-
-// const User = require("./models/user.js");
-// const Student = require("./models/student");
-// const StudentAttendance = require("./models/studentAttendance");
-// const School = require("./models/school");
 
 const getRoute = require("./routes/getRoute")
 const postRoute = require("./routes/postRoute")
@@ -40,7 +31,6 @@ app.use('/delete', deleteRoute);
 const { API_PORT } = process.env;
 const port = process.env.PORT || API_PORT;
 
-// server listening 
 server.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

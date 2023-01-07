@@ -1,7 +1,4 @@
-const User = require("../models/user");
-const Student = require("../models/student");
 const StudentAttendance = require("../models/studentAttendance");
-const School = require("../models/school");
 
 
 async function postAttendance(req, res) {
