@@ -125,11 +125,113 @@ async function deleteAttendance (req, res){
   
 };
 
+async function updateAttendanceDetails (req, res) {
+    console.log("attendanceDBservice updateAttendanceDetails function")
+    try {
+      //verify input
+      const { attendance_id, student_id, school_id, studentName, schoolDate, termLength, goalLessonCount } = req.body;
+  
+      if (!(attendance_id && student_id && tutor_id && school_id && studentName && schoolDate && termLength && goalLessonCount)) {
+        res.status(400).send("All inputs are required");
+      }
+      //check for user
+      const oldAttendance = await StudentAttendance.findOne({ _id: attendance_id });
+  
+      if (!oldAttendance) {
+        return res.status(404).send("Attendance document not found");
+      }
+      
+      //delete school
+      const updatedAttendanceDoc = await StudentAttendance.findOneAndUpdate({_id: attendance_id},
+        {
+            student_id: student_id,
+            school_id: school_id,
+            studentName: studentName,
+            schoolDate: schoolDate,
+            termLength: termLength,
+            goalLessonCount: goalLessonCount 
+        })
+      console.log("updatedAttendanceDoc:")
+      console.log(updatedAttendanceDoc)
+  
+      res.status(200).send(updatedAttendanceDoc)
+  
+    } catch (err) {
+      console.log(err);
+    }
+
+};
+
+async function updateAttendanceInvoiced (req, res) {
+    console.log("attendanceDBservice updateAttendanceInvoiced function")
+    try {
+      //verify input
+      const { attendance_id, invoiced } = req.body;
+  
+      if (!(attendance_id && invoiced)) {
+        res.status(400).send("attendance_id & invoiced are required");
+      }
+      //check for user
+      const oldAttendance = await StudentAttendance.findOne({ _id: attendance_id });
+  
+      if (!oldAttendance) {
+        return res.status(404).send("Attendance document not found");
+      }
+      
+      //delete school
+      const updatedAttendanceDoc = await StudentAttendance.findOneAndUpdate(
+        {_id: attendance_id},
+        { invoiced: invoiced })
+      console.log("updatedAttendanceDoc:")
+      console.log(updatedAttendanceDoc)
+  
+      res.status(200).send(updatedAttendanceDoc)
+  
+    } catch (err) {
+      console.log(err);
+    }
+
+};
+
+async function updateAttendanceRecord (req, res) {
+    console.log("attendanceDBservice updateAttendanceRecord function")
+    try {
+      //verify input
+      const { attendance_id, week, record, notes } = req.body;
+  
+      if (!(attendance_id && week && record)) {
+        res.status(400).send("attendance_id, week & record are required");
+      }
+      //check for user
+      const oldAttendance = await StudentAttendance.findOne({ _id: attendance_id });
+  
+      if (!oldAttendance) {
+        return res.status(404).send("Attendance document not found");
+      }
+      
+      //delete school
+      const updatedAttendanceDoc = await StudentAttendance.findOneAndUpdate(
+        {_id: attendance_id, "attendance.week": week},
+        { record: record, notes: notes })
+      console.log("updatedAttendanceDoc:")
+      console.log(updatedAttendanceDoc)
+  
+      res.status(200).send(updatedAttendanceDoc)
+  
+    } catch (err) {
+      console.log(err);
+    }
+
+};
+
 module.exports = {
     postAttendance,
     findAttendanceByST,
     findAttendanceBySchT,
-    deleteAttendance
+    deleteAttendance,
+    updateAttendanceDetails,
+    updateAttendanceInvoiced,
+    updateAttendanceRecord
 }
 
 // "student_id": "63b7f7a635b24a30ea8fceff",
