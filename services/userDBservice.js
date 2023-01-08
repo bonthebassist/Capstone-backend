@@ -104,7 +104,7 @@ async function loginUser(req, res){
 async function findUser (req, res){ //this may need a response if no user is found
   console.log("userDBservice findUser function")
   try {
-    const { user_id } = req.body;
+    const user_id = req.query.id;
 
     if (!user_id) {
       res.status(400).send("user_id is required");

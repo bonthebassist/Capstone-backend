@@ -137,13 +137,14 @@ async function findStudentByName(req, res) {
 async function findStudentsBySchool(req, res) {
   console.log("studentDBservice findStudents function")
   try {
-      const { tutor_id, school_id } = req.body
+      const tutor_id = req.query.tutor
+      const schoolName = req.query.school
 
       if (!(tutor_id && school_id)) {
           res.status(400).send("tutor_id is required");
       }
 
-      const students = await Student.find({ tutor_id: tutor_id, school_id: school_id })
+      const students = await Student.find({ tutor_id: tutor_id, schoolName: schoolName })
 
       res.status(200).json(students)
 

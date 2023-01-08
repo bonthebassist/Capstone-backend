@@ -27,7 +27,7 @@ router.get('/studentByName', auth, function (req, res){
     userController.getStudentByName(req,res)
 })
 
-router.get('/studentsBySchoolID', auth, function (req, res){
+router.get('/studentsBySchoolName', auth, function (req, res){
     userController.getStudentsBySchool(req,res)
 })
 
