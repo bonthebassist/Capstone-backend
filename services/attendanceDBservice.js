@@ -2,14 +2,14 @@ const StudentAttendance = require("../models/studentAttendance");
 
 
 async function postAttendance(req, res) {
-    console.log("schoolDBservice postSchool function")
+    console.log("attendanceDBservice postAttendance function")
     try {
         // Get attendance input
         const { student_id, tutor_id, school_id, schoolDate, termLength, goalLessonCount, studentName } = req.body;
 
         // Validate attendance input
         if (!(student_id && tutor_id && school_id && schoolDate && termLength && goalLessonCount && studentName)) {
-            res.status(400).send("School name is required");
+            res.status(400).send("student name is required");
         }
 
         // check if attendance document exists
@@ -43,7 +43,7 @@ async function postAttendance(req, res) {
             invoiced: false,
             studentName: studentName
         });
-
+        console.log(attendanceDoc)
         // return new attendance document
         res.status(201).json(attendanceDoc);
     } catch (err) {
@@ -55,14 +55,16 @@ async function postAttendance(req, res) {
 async function findAttendanceByST(req, res) {
     console.log("attendanceDBservice findAttendanceByST function")
     try {
-        const { student_id, tutor_id, schoolDate } = req.body
-
+        const student_id = req.query.student
+        const tutor_id = req.query.tutor
+        const schoolDate= req.query.schoolDate
+        console.log(student_id, tutor_id, schoolDate)
         if (!(student_id, tutor_id, schoolDate)) {
             res.status(400).send("student_id, tutor_id, schoolDate are required");
         }
-
+        
         const attendance = await StudentAttendance.findOne({ student_id: student_id, tutor_id: tutor_id, schoolDate: schoolDate })
-
+        
         res.status(200).json(attendance)
 
     } catch (err) {
@@ -74,7 +76,9 @@ async function findAttendanceByST(req, res) {
 async function findAttendanceBySchT(req, res) {
     console.log("attendanceDBservice findAttendanceBySchT  function")
     try {
-        const { tutor_id, school_id, schoolDate } = req.body
+        const tutor_id = req.query.tutor
+        const school_id = req.query.school
+        const schoolDate = req.query.schoolDate
 
         if (!(tutor_id && school_id && schoolDate)) {
             res.status(400).send("tutor_id, school_id, schoolDate is required");
@@ -88,6 +92,28 @@ async function findAttendanceBySchT(req, res) {
         console.log("in the catch")
         console.log(err);
     }
+};
+async function findAttendanceByTutor(req, res){
+    try {
+      const tutor_id = req.query.tutor
+      const schoolDate= req.query.schoolDate
+
+      console.log(tutor_id, schoolDate)
+
+      if (!(tutor_id, schoolDate)) {
+          res.status(400).send("tutor_id, schoolDate are required");
+      }
+      
+      const attendance = await StudentAttendance.find({ tutor_id: tutor_id, schoolDate: schoolDate })
+
+      return attendance
+
+      // res.status(200).json(attendance)
+
+  } catch (err) {
+      console.log("in the catch")
+      console.log(err);
+  }
 };
 
 async function deleteAttendance (req, res){
@@ -218,10 +244,10 @@ async function updateAttendanceRecord (req, res) {
       const attendanceObj = await StudentAttendance.findOne({_id: attendance_id})
 
       const studentAttendance = attendanceObj.attendance
+      
       const newArray = studentAttendance.filter(function (el) {
-      return (
-        el.record === ("P"||"A"||"L")
-        )})
+        return el.record === "P"|| el.record === "A"|| el.record ==="L"
+      })
 
       let attendanceCount = newArray.length
       console.log(attendanceCount)
@@ -243,6 +269,7 @@ module.exports = {
     postAttendance,
     findAttendanceByST,
     findAttendanceBySchT,
+    findAttendanceByTutor,
     deleteAttendance,
     updateAttendanceDetails,
     updateAttendanceInvoiced,

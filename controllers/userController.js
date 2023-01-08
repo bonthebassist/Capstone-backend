@@ -50,6 +50,11 @@ const getStudentsBySchool = async (req, res) => {
     let students = await studentData.findStudentsBySchool(req, res)
 }
 
+const getStudentByName = async (req, res) => {
+    console.log("userCOntroller getStudentByName function")
+    let student = await studentData.findStudentByName(req, res)
+}
+
 const getAttendanceST = async (req, res) => {
     console.log("userController getAttendanceST function")
     let students = await attendanceData.findAttendanceByST(req, res)
@@ -58,6 +63,25 @@ const getAttendanceST = async (req, res) => {
 const getAttendanceSchT = async (req, res) => {
     console.log("userController getAttendanceSchT function")
     let students = await attendanceData.findAttendanceBySchT(req, res)
+}
+
+const getAttendanceTutor = async (req, res) => {
+    let attendances = await attendanceData.findAttendanceByTutor(req, res)
+
+    let newArray = attendances.map((school)=>school._id)
+    console.log(newArray)
+    let bigArray = []
+    for (let i=0; i<attendances; i++){
+        console.log(attendances[i].school_id)
+        for (let j=0; j<newArray; j++){
+            let newArray2 = []
+            if (attendances[i].school_id === newArray[j]){
+                newArray2.push(attendances[i])
+            }
+            bigArray.push(newArray2)
+        }
+    }
+    res.status(200).json(attendances)
 }
 
 //Deletions
@@ -158,8 +182,10 @@ module.exports = {
     getStudents,
     getStudent,
     getStudentsBySchool,
+    getStudentByName,
     getAttendanceST,
     getAttendanceSchT,
+    getAttendanceTutor,
     removeUser,
     removeSchool,
     removeStudent,

@@ -23,15 +23,25 @@ router.get('/studentByID', auth, function (req, res){
     userController.getStudent(req,res)
 })
 
+router.get('/studentByName', auth, function (req, res){
+    userController.getStudentByName(req,res)
+})
+
 router.get('/studentsBySchoolID', auth, function (req, res){
     userController.getStudentsBySchool(req,res)
 })
 
 router.get('/attendanceByStudent', auth, function (req, res){
+    console.log('/attendanceByStudent')
     userController.getAttendanceST(req,res)
 })
 
 router.get('/attendanceBySchool', auth, function (req, res){
     userController.getAttendanceSchT(req,res)
+})
+
+router.get('/attendanceByTutor', auth, function (req, res){
+    userController.getAttendanceTutor(req,res)
+    //returns an array holding arrays of student attendances by school
 })
 module.exports = router;

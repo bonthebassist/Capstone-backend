@@ -41,12 +41,12 @@ async function postSchool(req, res) {
 async function findSchools(req, res) {
     console.log("schoolDBservice findSchools function")
     try {
-        const { tutor_id } = req.body
+        const tutor_id = req.query.tutor
 
         if (!tutor_id) {
             res.status(400).send("tutor_id is required");
         }
-
+ 
         const schools = await School.find({ tutor_id: tutor_id })
 
         res.status(200).json(schools)

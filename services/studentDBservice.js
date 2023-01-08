@@ -66,7 +66,7 @@ async function postStudent(req, res) {
 async function findStudents(req, res) {
     console.log("studentDBservice findStudents function")
     try {
-        const { tutor_id } = req.body
+        const tutor_id = req.query.tutor
 
         if (!tutor_id) {
             res.status(400).send("tutor_id is required");
@@ -101,16 +101,18 @@ async function findStudent(req, res) {
     }
 };
 
-async function findStudentsBySchool(req, res) {
-    console.log("studentDBservice findStudents function")
+async function findStudentByName(req, res) {
+    console.log("studentDBservice findStudentByName function")
     try {
-        const { tutor_id, school_id } = req.body
+        const tutor_id = req.query.tutor
+        const firstName = req.query.firstName
+        const lastName = req.query.lastName
 
-        if (!(tutor_id && school_id)) {
+        if (!(tutor_id && firstName && lastName)) {
             res.status(400).send("tutor_id is required");
         }
 
-        const students = await Student.find({ tutor_id: tutor_id, school_id: school_id })
+        const students = await Student.findOne({ tutor_id: tutor_id, studentFirstName: firstName, studentLirstName: lastName })
 
         res.status(200).json(students)
 
@@ -118,6 +120,25 @@ async function findStudentsBySchool(req, res) {
         console.log("in the catch")
         console.log(err);
     }
+};
+
+async function findStudentsBySchool(req, res) {
+  console.log("studentDBservice findStudents function")
+  try {
+      const { tutor_id, school_id } = req.body
+
+      if (!(tutor_id && school_id)) {
+          res.status(400).send("tutor_id is required");
+      }
+
+      const students = await Student.find({ tutor_id: tutor_id, school_id: school_id })
+
+      res.status(200).json(students)
+
+  } catch (err) {
+      console.log("in the catch")
+      console.log(err);
+  }
 };
 
 async function deleteStudent (req, res){
@@ -253,6 +274,7 @@ module.exports = {
     findStudents,
     findStudent,
     findStudentsBySchool,
+    findStudentByName,
     deleteStudent,
     studentInactive,
     updateStudentDetails
