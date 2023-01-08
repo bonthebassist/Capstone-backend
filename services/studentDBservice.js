@@ -11,6 +11,7 @@ async function postStudent(req, res) {
             studentLastName,
             studentEmail,
             school_id,
+            schoolName,
             tutor_id,
             instrument,
             yearLevel,
@@ -22,7 +23,17 @@ async function postStudent(req, res) {
         } = req.body;
 
         // Validate user input
-        if (!(studentFirstName && studentLastName && studentEmail && school_id && tutor_id && instrument && lessonType && lessonPrice)) {
+        if (!(
+          studentFirstName && 
+          studentLastName && 
+          studentEmail && 
+          school_id && 
+          schoolName &&
+          tutor_id && 
+          instrument && 
+          lessonType && 
+          lessonPrice
+          )) {
             res.status(400).send("Required fields are undefined");
         }
 
@@ -44,6 +55,7 @@ async function postStudent(req, res) {
             studentLastName: studentLastName,
             studentEmail: studentEmail,
             school_id: school_id,
+            schoolName: schoolName,
             tutor_id: tutor_id,
             instrument: instrument,
             yearLevel: yearLevel,
