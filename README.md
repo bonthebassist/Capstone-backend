@@ -21,5 +21,5 @@ If you want to run this locally:
  then,
  npm start
 
-- Clone the front end project to your local here: https://github.com/dvd25/bonthebassist/Capstone-Frontend.
+- Clone the front end project to your local here: [https://github.com/bonthebassist/Capstone-frontend.]
 - Follow the instructions in the front end repository readme file.
