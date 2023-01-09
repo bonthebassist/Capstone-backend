@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema({
     instrument: {
         type: String
     },
+    currentTermDate: {
+        type: String,
+        required: true
+    },
     token: {
         type: String
     },

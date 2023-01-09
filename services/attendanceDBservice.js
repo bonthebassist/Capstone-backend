@@ -30,7 +30,7 @@ async function postAttendance(req, res) {
             let weekNo = i + 1
             attendanceArray.push({ week: `${weekNo}`, record: "", notes: "" })
         }
-        // Create attendance document in our database
+        // Create attendance document in database
         const attendanceDoc = await StudentAttendance.create({
             student_id: student_id,
             tutor_id: tutor_id,
@@ -55,14 +55,17 @@ async function postAttendance(req, res) {
 async function findAttendanceByST(req, res) {
     console.log("attendanceDBservice findAttendanceByST function")
     try {
+        //set user inputs
         const student_id = req.query.student
         const tutor_id = req.query.tutor
         const schoolDate= req.query.schoolDate
-        console.log(student_id, tutor_id, schoolDate)
+
+        //check user inputs
         if (!(student_id, tutor_id, schoolDate)) {
             res.status(400).send("student_id, tutor_id, schoolDate are required");
         }
         
+        //search database for matching attendance
         const attendance = await StudentAttendance.findOne({ student_id: student_id, tutor_id: tutor_id, schoolDate: schoolDate })
         
         res.status(200).json(attendance)
@@ -76,14 +79,17 @@ async function findAttendanceByST(req, res) {
 async function findAttendanceBySchT(req, res) {
     console.log("attendanceDBservice findAttendanceBySchT  function")
     try {
+        //set user inputs
         const tutor_id = req.query.tutor
         const school_id = req.query.school
         const schoolDate = req.query.schoolDate
 
+        //check user inputs
         if (!(tutor_id && school_id && schoolDate)) {
             res.status(400).send("tutor_id, school_id, schoolDate is required");
         }
 
+        //search database for matching attendance record
         const attendance = await StudentAttendance.find({ school_id: school_id, tutor_id: tutor_id, schoolDate: schoolDate })
 
         res.status(200).json(attendance)
@@ -95,20 +101,19 @@ async function findAttendanceBySchT(req, res) {
 };
 async function findAttendanceByTutor(req, res){
     try {
+      //set user inputs
       const tutor_id = req.query.tutor
       const schoolDate= req.query.schoolDate
 
-      console.log(tutor_id, schoolDate)
-
+      //check user inputs
       if (!(tutor_id, schoolDate)) {
           res.status(400).send("tutor_id, schoolDate are required");
       }
       
+      //search database for matching attendance records
       const attendance = await StudentAttendance.find({ tutor_id: tutor_id, schoolDate: schoolDate })
 
       return attendance
-
-      // res.status(200).json(attendance)
 
   } catch (err) {
       console.log("in the catch")
@@ -125,14 +130,14 @@ async function deleteAttendance (req, res){
       if (!(attendance_id)) {
         res.status(400).send("tutor_id and student_id is required");
       }
-      //check for user
+      //check for attendance record
       const oldAttendance = await StudentAttendance.findOne({ _id: attendance_id });
   
       if (!oldAttendance) {
         return res.status(404).send("Attendance document not found");
       }
       
-      //delete school
+      //delete attendance record
       const deletedAttendanceDoc = await StudentAttendance.findOneAndDelete({_id: attendance_id})
       console.log("deletedAttendanceDoc:")
       console.log(deletedAttendanceDoc)
@@ -157,14 +162,14 @@ async function updateAttendanceDetails (req, res) {
       if (!(attendance_id && student_id && school_id && studentName && schoolDate && termLength && goalLessonCount)) {
         res.status(400).send("All inputs are required");
       }
-      //check for user
+      //check for attendance record
       const oldAttendance = await StudentAttendance.findOne({ _id: attendance_id });
   
       if (!oldAttendance) {
         return res.status(404).send("Attendance document not found");
       }
       
-      //delete school
+      //update attendance record
       const updatedAttendanceDoc = await StudentAttendance.updateOne({_id: attendance_id},
         {
             student_id: student_id,
@@ -194,14 +199,14 @@ async function updateAttendanceInvoiced (req, res) {
       if (!(attendance_id && invoiced)) {
         res.status(400).send("attendance_id & invoiced are required");
       }
-      //check for user
+      //check for attendance record
       const oldAttendance = await StudentAttendance.findOne({ _id: attendance_id });
   
       if (!oldAttendance) {
         return res.status(404).send("Attendance document not found");
       }
       
-      //delete school
+      //update attendance record
       const updatedAttendanceDoc = await StudentAttendance.updateOne(
         {_id: attendance_id},
         { invoiced: invoiced })
@@ -225,7 +230,7 @@ async function updateAttendanceRecord (req, res) {
       if (!(attendance_id && week && record)) {
         res.status(400).send("attendance_id, week & record are required");
       }
-      //check for user
+      //check for attendance record
       const oldAttendance = await StudentAttendance.findOne({ _id: attendance_id });
   
       if (!oldAttendance) {
@@ -251,13 +256,14 @@ async function updateAttendanceRecord (req, res) {
 
       let attendanceCount = newArray.length
       console.log(attendanceCount)
+
       //dbcall for updating lessonCount
       const updatedAttCount = await StudentAttendance.updateOne({_id: attendance_id}, {lessonCount: attendanceCount})
       console.log("Updated lesson Count: ")
       console.log(updatedAttCount)
     
     
-    res.status(200).send("update successful")
+      res.status(200).send("update successful")
   
     } catch (err) {
       console.log(err);
@@ -275,12 +281,3 @@ module.exports = {
     updateAttendanceInvoiced,
     updateAttendanceRecord
 }
-
-// "student_id": "63b7f7a635b24a30ea8fceff",
-// "tutor_id": "63b7eaf696702fb7d08bea83",
-// "school_id": "63b7f37d8f9770b0ab7f80c0",
-// "schoolDate": "T12023",
-// "termLength": "10",
-// "goalLessonCount": "8",
-// "invoiced": false,
-// "studentName": "Marsha Brown"

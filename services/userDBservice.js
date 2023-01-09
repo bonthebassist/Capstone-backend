@@ -10,10 +10,10 @@ async function checkRegistration (req, res){
     console.log("userDBservice checkRegistration function")
     try {
         // Get user input
-        const { firstName, lastName, email, password, instrument } = req.body;
+        const { firstName, lastName, email, password, instrument, currentTermDate } = req.body;
 
         // Validate user input
-        if (!(email && password && firstName && lastName)) {
+        if (!(email && password && firstName && lastName && currentTermDate)) {
         res.status(400).send("All input is required");
         }
 
@@ -25,16 +25,17 @@ async function checkRegistration (req, res){
         return res.status(409).send("User Already Exists. Please Login");
         }
 
-        //Encrypt user password
+        // Encrypt user password
         encryptedPassword = await bcrypt.hash(password, 10);
 
-        // Create user in our database
+        // Create user in database
         const user = await User.create({
         firstName,
         lastName,
         email: email.toLowerCase(), // sanitize: convert email to lowercase
         password: encryptedPassword,
         instrument,
+        currentTermDate,
         token:"",
         messages:{
             invoiceReminder:"",
@@ -104,12 +105,15 @@ async function loginUser(req, res){
 async function findUser (req, res){ //this may need a response if no user is found
   console.log("userDBservice findUser function")
   try {
+    // get user input
     const user_id = req.query.id;
 
+    // validate user input
     if (!user_id) {
       res.status(400).send("user_id is required");
     }
 
+    //search for matching user
     const user = await User.findOne({ _id: user_id });
 
     res.status(200).json(user)
@@ -123,7 +127,7 @@ async function deleteUser (req, res){
   console.log("userDBservice deleteUser function")
   try {
     //verify input
-    const { user_id } = req.body;
+    const user_id = req.query.user;
 
     if (!user_id) {
       res.status(400).send("user_id is required");
@@ -172,8 +176,10 @@ async function deleteUser (req, res){
 async function updateUserDetails (req, res) {
   console.log("userDBservice updateuser function")
   try {
+    // get user input
     const { user_id, firstName, lastName, email, instrument } = req.body;
 
+    //validate user input
     if (!(user_id && firstName && lastName && email && instrument)) {
       res.status(400).send("All inputs are required");
     }
@@ -202,6 +208,7 @@ async function updateUserDetails (req, res) {
 async function updateUserMessages (req, res) {
   console.log("userDBservice updateUserMessages function")
   try {
+    // get user input
     const { user_id, invoiceSend, invoiceReminder, lateForLesson, absentFromLesson } = req.body;
 
     //check input
@@ -215,6 +222,7 @@ async function updateUserMessages (req, res) {
     if (!oldUser) {
       return res.status(404).send("User not found");
     }
+    
     //update user messages
     const user = await User.updateOne({ _id: user_id },{
         messages:{

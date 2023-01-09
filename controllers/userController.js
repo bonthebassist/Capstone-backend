@@ -19,6 +19,8 @@ const addAttendance = async (req, res) => {
     let update = await attendanceData.postAttendance(req, res)
 }
 
+
+
 //Get requests
 const getUser = async (req, res) => {
     console.log("userController getUser function")
@@ -68,21 +70,25 @@ const getAttendanceSchT = async (req, res) => {
 const getAttendanceTutor = async (req, res) => {
     let attendances = await attendanceData.findAttendanceByTutor(req, res)
 
-    let newArray = attendances.map((school)=>school._id)
-    console.log(newArray)
-    let bigArray = []
-    for (let i=0; i<attendances; i++){
-        console.log(attendances[i].school_id)
-        for (let j=0; j<newArray; j++){
-            let newArray2 = []
-            if (attendances[i].school_id === newArray[j]){
-                newArray2.push(attendances[i])
-            }
-            bigArray.push(newArray2)
-        }
-    }
+    //Filter attendance objects to create seperate arrays according to school -- found best done on front end.
+    // let newArray = attendances.map((school)=>school._id)
+    // console.log(newArray)
+    // let bigArray = []
+    // for (let i=0; i<attendances; i++){
+    //     console.log(attendances[i].school_id)
+    //     for (let j=0; j<newArray; j++){
+    //         let newArray2 = []
+    //         if (attendances[i].school_id === newArray[j]){
+    //             newArray2.push(attendances[i])
+    //         }
+    //         bigArray.push(newArray2)
+    //     }
+    // }
+    
     res.status(200).json(attendances)
 }
+
+
 
 //Deletions
 const removeUser = async (req, res) => {
@@ -104,6 +110,8 @@ const removeAttendance = async (req, res) => {
     console.log("userController removeAttendance function")
     let deletion = await attendanceData.deleteAttendance(req, res)
 }
+
+
 
 //updates
 const shadowStudent = async (req, res) => {

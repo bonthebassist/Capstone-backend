@@ -5,7 +5,7 @@ const StudentAttendance = require("../models/studentAttendance");
 async function postStudent(req, res) {
     console.log("schoolDBservice postSchool function")
     try {
-        // Get student input
+        // Get user input
         const {
             studentFirstName,
             studentLastName,
@@ -49,7 +49,7 @@ async function postStudent(req, res) {
             return res.status(409).send("Student Already Exists. Please update existing student");
         }
 
-        // Create student in our database
+        // Create student in database
         const student = await Student.create({
             studentFirstName: studentFirstName,
             studentLastName: studentLastName,
@@ -78,12 +78,13 @@ async function postStudent(req, res) {
 async function findStudents(req, res) {
     console.log("studentDBservice findStudents function")
     try {
+      //get user input
         const tutor_id = req.query.tutor
-
+      //validate input
         if (!tutor_id) {
             res.status(400).send("tutor_id is required");
         }
-
+        //search for matching students in DB
         const students = await Student.find({ tutor_id: tutor_id })
 
         res.status(200).json(students)
@@ -97,12 +98,13 @@ async function findStudents(req, res) {
 async function findStudent(req, res) {
     console.log("studentDBservice findStudent function")
     try {
+      //get user input
         const { student_id } = req.body
-
+      //validate input
         if (!student_id) {
             res.status(400).send("school_id is required");
         }
-
+      //find matching student
         const student = await Student.findOne({ _id: student_id })
 
         res.status(200).json(student)
@@ -116,14 +118,17 @@ async function findStudent(req, res) {
 async function findStudentByName(req, res) {
     console.log("studentDBservice findStudentByName function")
     try {
+        //get user input
         const tutor_id = req.query.tutor
         const firstName = req.query.firstName
         const lastName = req.query.lastName
 
+        //validate input
         if (!(tutor_id && firstName && lastName)) {
             res.status(400).send("tutor_id is required");
         }
 
+        //return matching student
         const students = await Student.findOne({ tutor_id: tutor_id, studentFirstName: firstName, studentLirstName: lastName })
 
         res.status(200).json(students)
@@ -137,13 +142,16 @@ async function findStudentByName(req, res) {
 async function findStudentsBySchool(req, res) {
   console.log("studentDBservice findStudents function")
   try {
+    //get user input
       const tutor_id = req.query.tutor
       const schoolName = req.query.school
 
-      if (!(tutor_id && school_id)) {
+      //validate input
+      if (!(tutor_id && schoolName)) {
           res.status(400).send("tutor_id is required");
       }
 
+      //find matching students according to tutor and schoolName
       const students = await Student.find({ tutor_id: tutor_id, schoolName: schoolName })
 
       res.status(200).json(students)
@@ -158,24 +166,24 @@ async function deleteStudent (req, res){
     console.log("studentDBservice deleteStudent function")
     try {
       //verify input
-      const { tutor_id, student_id } = req.body;
+      const student_id  = req.query.student;
   
-      if (!(tutor_id && student_id)) {
-        res.status(400).send("tutor_id and student_id is required");
+      if (!(student_id)) {
+        res.status(400).send("student_id is required");
       }
-      //check for user
-      const oldStudent = await Student.findOne({ _id: student_id, tutor_id: tutor_id });
+      //check for student
+      const oldStudent = await Student.findOne({ _id: student_id });
   
       if (!oldStudent) {
         return res.status(404).send("Student not found");
       }
       
       //delete associated studentAttendance
-      const foundAttendances = await StudentAttendance.deleteMany({ tutor_id: tutor_id, student_id: student_id })
+      const foundAttendances = await StudentAttendance.deleteMany({ student_id: student_id })
       console.log("StudentAttendances:")
       console.log(foundAttendances)
       
-      //delete school
+      //delete student
       const deletedStudent = await Student.findOneAndDelete({_id: student_id})
       console.log("deletedStudent:")
       console.log(deletedStudent)
@@ -201,14 +209,14 @@ async function studentInactive (req, res){
       if (!(student_id)) {
         res.status(400).send("student_id is required");
       }
-      //check for user
+      //check for student
       const oldStudent = await Student.findOne({ _id: student_id });
   
       if (!oldStudent) {
         return res.status(404).send("Student not found");
       }
 
-      //updateStudent
+      //update Student
       const updatedStudent = await Student.updateOne({_id: student_id}, {active: false})
       console.log(oldStudent.studentFirstName +" "+ oldStudent.studentLastName)
       console.log(updatedStudent)
@@ -224,6 +232,7 @@ async function studentInactive (req, res){
 async function updateStudentDetails (req, res) {
     console.log("studentDBservice updateStudentDetails function")
     try {
+      //get user input
       const { 
         student_id, 
         studentEmail, 
@@ -238,7 +247,8 @@ async function updateStudentDetails (req, res) {
         lessonPrice, 
         lessonType 
         } = req.body;
-  
+      
+      //validate input
       if (!(student_id && 
         studentEmail && 
         studentFirstName && 
