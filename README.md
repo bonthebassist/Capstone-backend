@@ -1,5 +1,5 @@
 # Capstone-backend
-# Chuta - Instrumental Tutor Self-Management system
+# Chuta - Instrumental Tutoring Personal Management System
 Backend app created for my Capstone Project using Nodejs and Expressjs. Frontend application set up to consume the API's this backend offers.
 A backend application that has API and microservices that an instrumental tutor can utilise.
 
